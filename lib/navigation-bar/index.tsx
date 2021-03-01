@@ -91,9 +91,10 @@ export class NavigationBar extends Component<Props> {
         <div className="navigation-bar theme-color-bg theme-color-fg theme-color-border">
           <div className="navigation-bar__folders theme-color-border">
             <NavigationBarItem
-              icon={<SettingsIcon />}
-              label="Settings"
-              onClick={onSettings}
+              icon={<NotesIcon />}
+              isSelected={this.isSelected({ selectedRow: 'all' })}
+              label="All Notes"
+              onClick={onShowAllNotes}
             />
             <NavigationBarItem
               icon={<TrashIcon />}
@@ -102,10 +103,9 @@ export class NavigationBar extends Component<Props> {
               onClick={this.onSelectTrash}
             />
             <NavigationBarItem
-              icon={<NotesIcon />}
-              isSelected={this.isSelected({ selectedRow: 'all' })}
-              label="All Notes"
-              onClick={onShowAllNotes}
+              icon={<SettingsIcon />}
+              label="Settings"
+              onClick={onSettings}
             />
           </div>
           <div className="navigation-bar__tags theme-color-border">
