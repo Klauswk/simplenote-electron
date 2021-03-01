@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
-import onClickOutside from 'react-onclickoutside';
+import FocusTrap from 'focus-trap-react';
 
 import ConnectionStatus from '../connection-status';
 import NavigationBarItem from './item';
@@ -23,7 +23,7 @@ type StateProps = {
 
 type DispatchProps = {
   onAbout: () => any;
-  onOutsideClick: () => any;
+  onFocusTrapDeactivate: () => any;
   onSettings: () => any;
   onShowAllNotes: () => any;
   selectTrash: () => any;
@@ -34,17 +34,26 @@ type Props = StateProps & DispatchProps;
 
 export class NavigationBar extends Component<Props> {
   static displayName = 'NavigationBar';
+  isMounted = false;
 
-  // Used by onClickOutside wrapper
-  handleClickOutside = () => {
-    const { isDialogOpen, onOutsideClick, showNavigation } = this.props;
+  componentDidMount() {
+    this.isMounted = true;
+  }
+
+  componentWillUnmount() {
+    this.isMounted = false;
+  }
+
+  handleFocusTrapDeactivate = () => {
+    const { isDialogOpen, onFocusTrapDeactivate, showNavigation } = this.props;
 
     if (isDialogOpen) {
       return;
     }
 
-    if (showNavigation) {
-      onOutsideClick();
+    // isMounted prevents reopening sidebar after navigation event
+    if (showNavigation && this.isMounted) {
+      onFocusTrapDeactivate();
     }
   };
 
@@ -64,62 +73,76 @@ export class NavigationBar extends Component<Props> {
   };
 
   render() {
-    const { autoHideMenuBar, onAbout, onSettings, onShowAllNotes } = this.props;
+    const {
+      autoHideMenuBar,
+      isDialogOpen,
+      onAbout,
+      onSettings,
+      onShowAllNotes,
+    } = this.props;
     return (
-      <div className="navigation-bar theme-color-bg theme-color-fg theme-color-border">
-        <div className="navigation-bar__folders theme-color-border">
-          <NavigationBarItem
-            icon={<SettingsIcon />}
-            label="Settings"
-            onClick={onSettings}
-          />
-          <NavigationBarItem
-            icon={<TrashIcon />}
-            isSelected={this.isSelected({ selectedRow: 'trash' })}
-            label="Trash"
-            onClick={this.onSelectTrash}
-          />
-          <NavigationBarItem
-            icon={<NotesIcon />}
-            isSelected={this.isSelected({ selectedRow: 'all' })}
-            label="All Notes"
-            onClick={onShowAllNotes}
-          />
-        </div>
-        <div className="navigation-bar__tags theme-color-border">
-          <TagList />
-        </div>
-        <div className="navigation-bar__tools theme-color-border">
-          <div className="navigation-bar__server-connection">
-            <ConnectionStatus />
+      <FocusTrap
+        active={!isDialogOpen}
+        focusTrapOptions={{
+          onDeactivate: this.handleFocusTrapDeactivate,
+          clickOutsideDeactivates: true,
+        }}
+      >
+        <div className="navigation-bar theme-color-bg theme-color-fg theme-color-border">
+          <div className="navigation-bar__folders theme-color-border">
+            <NavigationBarItem
+              icon={<SettingsIcon />}
+              label="Settings"
+              onClick={onSettings}
+            />
+            <NavigationBarItem
+              icon={<TrashIcon />}
+              isSelected={this.isSelected({ selectedRow: 'trash' })}
+              label="Trash"
+              onClick={this.onSelectTrash}
+            />
+            <NavigationBarItem
+              icon={<NotesIcon />}
+              isSelected={this.isSelected({ selectedRow: 'all' })}
+              label="All Notes"
+              onClick={onShowAllNotes}
+            />
+          </div>
+          <div className="navigation-bar__tags theme-color-border">
+            <TagList />
+          </div>
+          <div className="navigation-bar__tools theme-color-border">
+            <div className="navigation-bar__server-connection">
+              <ConnectionStatus />
+            </div>
+          </div>
+          <div className="navigation-bar__footer">
+            <button
+              type="button"
+              className="navigation-bar__footer-item theme-color-fg-dim"
+              onClick={this.props.showKeyboardShortcuts}
+            >
+              Keyboard Shortcuts
+            </button>
+          </div>
+          <div className="navigation-bar__footer">
+            <button
+              type="button"
+              className="navigation-bar__footer-item theme-color-fg-dim"
+              onClick={this.onHelpClicked}
+            >
+              Help &amp; Support
+            </button>
+            <button
+              type="button"
+              className="navigation-bar__footer-item theme-color-fg-dim"
+              onClick={onAbout}
+            >
+              About
+            </button>
           </div>
         </div>
-        <div className="navigation-bar__footer">
-          <button
-            type="button"
-            className="navigation-bar__footer-item theme-color-fg-dim"
-            onClick={this.props.showKeyboardShortcuts}
-          >
-            Keyboard Shortcuts
-          </button>
-        </div>
-        <div className="navigation-bar__footer">
-          <button
-            type="button"
-            className="navigation-bar__footer-item theme-color-fg-dim"
-            onClick={this.onHelpClicked}
-          >
-            Help &amp; Support
-          </button>
-          <button
-            type="button"
-            className="navigation-bar__footer-item theme-color-fg-dim"
-            onClick={onAbout}
-          >
-            About
-          </button>
-        </div>
-      </div>
+      </FocusTrap>
     );
   }
 }
@@ -136,14 +159,11 @@ const mapStateToProps: S.MapState<StateProps> = ({
 
 const mapDispatchToProps: S.MapDispatch<DispatchProps> = {
   onAbout: () => actions.ui.showDialog('ABOUT'),
-  onOutsideClick: actions.ui.toggleNavigation,
+  onFocusTrapDeactivate: actions.ui.toggleNavigation,
   onShowAllNotes: actions.ui.showAllNotes,
   onSettings: () => actions.ui.showDialog('SETTINGS'),
   selectTrash: actions.ui.selectTrash,
   showKeyboardShortcuts: () => actions.ui.showDialog('KEYBINDINGS'),
 };
 
-export default connect(
-  mapStateToProps,
-  mapDispatchToProps
-)(onClickOutside(NavigationBar));
+export default connect(mapStateToProps, mapDispatchToProps)(NavigationBar);
