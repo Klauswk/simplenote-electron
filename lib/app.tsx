@@ -198,7 +198,9 @@ class AppComponent extends Component<Props> {
     return (
       <div className={appClasses}>
         {showEmailVerification && <EmailVerification />}
-        {isDevConfig && <DevBadge />}
+        {isDevConfig && (
+          <DevBadge aria-hidden={showNavigation ? true : undefined} />
+        )}
         <div className={mainClasses}>
           {showNavigation && <NavigationBar />}
           <AppLayout />
