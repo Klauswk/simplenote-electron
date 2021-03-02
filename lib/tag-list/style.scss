@@ -2,11 +2,10 @@
   border-bottom: 1px solid;
   display: flex;
   font-size: 16px;
-  height: 44px;
+  margin-left: 13px;
   flex-direction: row;
   justify-content: flex-start;
   align-items: center;
-  padding-left: 13px;
 
   &:hover {
     background-color: $studio-gray-0;
@@ -74,10 +73,8 @@
   flex: 1 1 auto;
   display: block;
   width: 50px;
-  height: 2em;
   line-height: 2em;
-  margin: 8px 13px 8px 0;
-  padding: 0;
+  padding: 6px 0 5px 0;
   border: none;
   text-overflow: ellipsis;
   font-size: 100%;
@@ -87,14 +84,9 @@
   &.is-selected {
     color: $studio-simplenote-blue-50;
   }
-
-  &:focus {
-    outline: none;
-  }
 }
 
 button.tag-list-input {
-  margin: 8px 0;
   overflow-x: hidden;
   text-align: left;
 }
@@ -106,6 +98,11 @@ input.tag-list-input {
 .tag-list-editing {
   .tag-list-input {
     cursor: text;
+    margin-right: 13px;
+
+    &:focus {
+      outline: none;
+    }
   }
 }
 
