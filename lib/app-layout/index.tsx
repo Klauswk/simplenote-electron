@@ -137,7 +137,11 @@ export class AppLayout extends Component<Props> {
             <div className="app-layout__note-column theme-color-bg theme-color-fg theme-color-border">
               <NoteToolbar aria-hidden={hiddenByRevisions} />
               {showRevisions ? (
-                <NotePreview noteId={openedNote} note={openedRevision} />
+                <NotePreview
+                  aria-hidden={hiddenByRevisions}
+                  noteId={openedNote}
+                  note={openedRevision}
+                />
               ) : (
                 <NoteEditor />
               )}
