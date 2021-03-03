@@ -102,7 +102,7 @@ export class RevisionSelector extends Component<Props> {
           onDeactivate: this.onCancelRevision,
         }}
       >
-        <div className={mainClasses}>
+        <div className={mainClasses} role="dialog">
           <div className="revision-selector-inner">
             <div className="revision-slider-title">History</div>
             <div className="revision-date" style={{ left: datePos }}>
