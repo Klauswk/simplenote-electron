@@ -80,8 +80,8 @@ export class NavigationBar extends Component<Props> {
       <FocusTrap
         paused={isDialogOpen}
         focusTrapOptions={{
-          onDeactivate: this.handleFocusTrapDeactivate,
           clickOutsideDeactivates: true,
+          onDeactivate: this.handleFocusTrapDeactivate,
         }}
       >
         <div className="navigation-bar theme-color-bg theme-color-fg theme-color-border">

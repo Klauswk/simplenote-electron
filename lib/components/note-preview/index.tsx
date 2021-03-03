@@ -152,7 +152,7 @@ export const NotePreview: FunctionComponent<Props> = ({
   }, [note?.content, searchQuery, showRenderedView]);
 
   return (
-    <div className="note-detail-wrapper">
+    <div aria-hidden="true" className="note-detail-wrapper">
       <div className="note-detail note-detail-preview">
         <div
           ref={previewNode}
