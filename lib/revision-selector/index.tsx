@@ -102,14 +102,25 @@ export class RevisionSelector extends Component<Props> {
           onDeactivate: this.onCancelRevision,
         }}
       >
-        <div className={mainClasses} role="dialog">
+        <div
+          className={mainClasses}
+          role="dialog"
+          aria-labelledby="revision-slider-title"
+        >
           <div className="revision-selector-inner">
-            <div className="revision-slider-title">History</div>
-            <div className="revision-date" style={{ left: datePos }}>
+            <div id="revision-slider-title" className="revision-slider-title">
+              History
+            </div>
+            <div
+              aria-hidden
+              className="revision-date"
+              style={{ left: datePos }}
+            >
               {revisionDate}
             </div>
             <div className="revision-slider">
               <Slider
+                aria-valuetext={`Revision from ${revisionDate}`}
                 disabled={!revisions || revisions.size === 0}
                 min={
                   1 /* don't allow reverting to the very first version because that's a blank note */
@@ -127,6 +138,7 @@ export class RevisionSelector extends Component<Props> {
                 Cancel
               </button>
               <button
+                aria-label={`Restore revision from ${revisionDate}`}
                 disabled={isNewest}
                 className="button button-primary button-compact"
                 onClick={this.onAcceptRevision}
